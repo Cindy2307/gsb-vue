@@ -36,6 +36,11 @@
                             <div id="search">
                                 <input v-model="motCle" type="search" name="motCle" id="motCle" placeholder="Mot clé">
                                 <i @click="rechercheMot" id="iconeRechercher" class="fas fa-search text-white"></i>
+                                <ul >
+                                    <li v-for="rapport in rapportMot" :key="rapport">
+                                        {{ rapport.id}}
+                                    </li>
+                                </ul>
                             </div>
                             <select
                             name="idRapport"
@@ -74,6 +79,7 @@ export default {
     data() {
         return {
         info: null,
+        rapportMot: null
         };
     },
     methods: {
@@ -102,6 +108,27 @@ export default {
             localStorage.setItem("rapportId", id);
             this.$router.push("/RapportRedacteurFiche");
         },
+        rechercheMot: function (){
+            axios
+            .get("http://localhost:3002/gsb/rapport?champ=bilan&motcle=le", {
+            headers: {
+                "Content-Type": "application/json",
+            },
+            withCredentials: true,
+            })
+            .catch((e) => {
+            console.log(e);
+            })
+            .then((response) => {
+                this.rapportMot = response.data
+                console.log(this.rapportMot);
+            });
+            
+            
+
+            
+        }
+        
     },
     mounted(){
         this.listeRapport();
